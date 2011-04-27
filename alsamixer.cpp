@@ -123,10 +123,18 @@ void AlsaMixer::lower_volume(int percentage)
 
 bool AlsaMixer::get_mute()
 {
-    int muted;
-    snd_mixer_handle_events(this->handle);
-    snd_mixer_selem_get_playback_switch(this->active_elem, UNKN, &muted);
-    return !(bool)muted;
+    if (snd_mixer_selem_has_playback_switch(this->active_elem))
+    {
+        int muted;
+        snd_mixer_handle_events(this->handle);
+        snd_mixer_selem_get_playback_switch(this->active_elem, LEFT, &muted);
+        snd_mixer_selem_get_playback_switch(this->active_elem, RIGHT, &muted);
+        return !(bool)muted;
+    }
+    else
+    {
+        return (this->get_volume() == 0 ? true : false);
+    }
 }
 
 void AlsaMixer::mute_volume()
@@ -146,7 +154,10 @@ void AlsaMixer::mute_volume()
 void AlsaMixer::unmute_volume()
 {
     if (!snd_mixer_selem_has_playback_switch(this->active_elem))
+    {
+        std::cout << this->muted_volume << std::endl;
         this->set_volume(this->muted_volume);
+    }
     else
     {
         snd_mixer_handle_events(this->handle);

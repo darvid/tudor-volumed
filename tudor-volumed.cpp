@@ -35,8 +35,8 @@ IMixer* setup_mixer(Environment* env)
     }
 #endif
 #ifdef USE_ALSA
-    const std::string channel = env->get_str("alsa_channel");
-    const std::string cardname = env->get_str("alsa_cardname", "default");
+    const std::string channel = env->get_str("ALSA_CHANNEL");
+    const std::string cardname = env->get_str("ALSA_CARDNAME", "default");
     AlsaMixer* mixer = new AlsaMixer(cardname);
     if (channel.empty())
         mixer->set_active_playback_elem();
