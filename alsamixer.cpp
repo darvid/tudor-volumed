@@ -127,7 +127,11 @@ bool AlsaMixer::get_mute()
     {
         int muted;
         snd_mixer_handle_events(this->handle);
-        snd_mixer_selem_get_playback_switch(this->active_elem, UNKN, &muted);
+        // TODO: write actual playback switch logic
+        if (snd_mixer_selem_get_playback_switch(this->active_elem, UNKN,
+            &muted) < 0)
+            snd_mixer_selem_get_playback_switch(this->active_elem, LEFT,
+                &muted);
         return !(bool)muted;
     }
     else
@@ -146,6 +150,7 @@ void AlsaMixer::mute_volume()
     else
     {
         snd_mixer_handle_events(this->handle);
+        // TODO: write actual playback switch logic
         snd_mixer_selem_set_playback_switch(this->active_elem, LEFT, 0);
         snd_mixer_selem_set_playback_switch(this->active_elem, RIGHT, 0);
     }
@@ -155,12 +160,12 @@ void AlsaMixer::unmute_volume()
 {
     if (!snd_mixer_selem_has_playback_switch(this->active_elem))
     {
-        std::cout << this->muted_volume << std::endl;
         this->set_volume(this->muted_volume);
     }
     else
     {
         snd_mixer_handle_events(this->handle);
+        // TODO: write actual playback switch logic
         snd_mixer_selem_set_playback_switch(this->active_elem, LEFT, 1);
         snd_mixer_selem_set_playback_switch(this->active_elem, RIGHT, 1);
     }
