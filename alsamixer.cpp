@@ -161,7 +161,8 @@ void AlsaMixer::unmute_volume()
     else
     {
         snd_mixer_handle_events(this->handle);
-        snd_mixer_selem_set_playback_switch(this->active_elem, UNKN, 1);
+        snd_mixer_selem_set_playback_switch(this->active_elem, LEFT, 1);
+        snd_mixer_selem_set_playback_switch(this->active_elem, RIGHT, 1);
     }
 }
 
